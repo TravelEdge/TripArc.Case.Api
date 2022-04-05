@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetCoreTargetVersion)</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />    
+    <PackageReference Include="TripArc.Common" Version="$(TripArcCommonVersion)" />
+    <PackageReference Include="TripArc.Common.Abstractions" Version="$(TripArcCommonVersion)" />
+    <PackageReference Include="TripArc.Common.Storage" Version="$(TripArcCommonVersion)" />
+  </ItemGroup>  
+
+  <ItemGroup>
+    <ProjectReference Include="..\TripArc.Case.Domain\TripArc.Case.Domain.csproj" />
+    <ProjectReference Include="..\TripArc.Case.Shared\TripArc.Case.Shared.csproj" />
+  </ItemGroup>
+
+</Project>
