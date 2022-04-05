@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetCoreTargetVersion)</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="TripArc.Common" Version="$(TripArcCommonVersion)" />
+    <PackageReference Include="TripArc.Common.CQRS" Version="$(TripArcCommonVersion)" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Case\Commands" />
+    <Folder Include="Case\Enums" />
+    <Folder Include="Case\Extensions" />
+  </ItemGroup>
+
+</Project>
