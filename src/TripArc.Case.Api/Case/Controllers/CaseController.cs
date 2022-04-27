@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,17 @@ namespace TripArc.Case.Api.Case.Controllers
             {
                 var query = _mapper.Map<CaseSearchByIdQuery>(model);
                 return await _queryDispatcher.ExecuteQueryAsync<CaseSearchByIdQuery, CaseSearchByIdResponse>(query);
+            });
+        }
+
+        [HttpGet("followup/profile/{id}")]
+        public async Task GetFollowUpsByIdAsync(FollowUpSearchByProfileIdInputModel model)
+        {
+            await ExecuteAsync(async () =>
+            {
+                var query = _mapper.Map<FollowUpSearchByProfileIdQuery>(model);
+                return await _queryDispatcher
+                    .ExecuteQueryAsync<FollowUpSearchByProfileIdQuery, IEnumerable<FollowUpSearchByProfileIdResponse>>(query);
             });
         }
     }

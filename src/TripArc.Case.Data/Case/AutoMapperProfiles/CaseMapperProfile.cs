@@ -12,6 +12,7 @@ namespace TripArc.Case.Data.Case.AutoMapperProfiles
             CreateMap<Entities.Case, CaseSearchByIdResponse>();
 
             CreateMap<CaseSearchByIdInputModel, CaseSearchByIdQuery>();
+            CreateMap<FollowUpSearchByProfileIdInputModel, FollowUpSearchByProfileIdQuery>();
         }
     }
 }
