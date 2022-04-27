@@ -14,5 +14,9 @@
     <Folder Include="Case\Enums" />
     <Folder Include="Case\Extensions" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\TripArc.Case.Domain\TripArc.Case.Domain.csproj" />
+  </ItemGroup>
 
 </Project>

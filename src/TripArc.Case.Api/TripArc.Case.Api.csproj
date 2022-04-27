@@ -42,4 +42,13 @@
     <Folder Include="Case\CommandHandlers" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="TripArc.Profile.Client">
+      <HintPath>..\..\..\TripArc.Profile.Api\src\TripArc.Profile.Client\bin\Debug\net5.0\TripArc.Profile.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="TripArc.Profile.Shared">
+      <HintPath>..\..\..\TripArc.Profile.Api\src\TripArc.Profile.Shared\bin\Debug\net5.0\TripArc.Profile.Shared.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
