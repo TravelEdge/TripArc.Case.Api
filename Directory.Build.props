@@ -1,7 +1,7 @@
 <Project>
 	<PropertyGroup Label="NET Core and packages dependency versions">
-		<NetCoreTargetVersion>net5.0</NetCoreTargetVersion>
-		<LanguageVersion>9</LanguageVersion>
-		<TripArcCommonVersion>1.1.15-beta</TripArcCommonVersion>
+		<NetCoreTargetVersion>net6.0</NetCoreTargetVersion>
+		<LanguageVersion>10</LanguageVersion>
+		<TripArcCommonVersion>1.1.18-beta</TripArcCommonVersion>
 	</PropertyGroup>
 </Project>
