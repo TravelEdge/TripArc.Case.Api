@@ -14,8 +14,8 @@ namespace TripArc.Case.Domain.Case.Entities
         public bool Flagged { get; set; }
         public string MostRecentItinerary { get; set; }
         public string CaseName { get; set; }
-        public DateTime TripStartDate { get; set; }
-        public DateTime LastQuoteDate { get; set; }
+        public DateTime? TripStartDate { get; set; }
+        public DateTime? LastQuoteDate { get; set; }
         public decimal LastTripPrice { get; set; }
     }
 }
