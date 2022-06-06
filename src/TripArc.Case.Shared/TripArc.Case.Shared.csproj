@@ -6,7 +6,7 @@
   
   <ItemGroup>
     <PackageReference Include="TripArc.Common" Version="$(TripArcCommonVersion)" />
-    <PackageReference Include="TripArc.Common.CQRS" Version="$(TripArcCommonVersion)" />
+    <PackageReference Include="TripArc.Common.CQRS" Version="$(TripArcCommonVersion)" />  
   </ItemGroup>
   
   <ItemGroup>

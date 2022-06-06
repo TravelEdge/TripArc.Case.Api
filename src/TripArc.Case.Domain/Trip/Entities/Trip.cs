@@ -28,7 +28,6 @@ namespace TripArc.Case.Domain.Trip.Entities
         public int? TripLockId { get; set; }
         public int? ApprovalRequestId { get; set; }
         public int? TramsresCardNum { get; set; }
-        public int ComputedItineraryId { get; set; }
         public bool PassportAlertDismiss { get; set; }        
     }
 }

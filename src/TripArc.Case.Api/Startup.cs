@@ -1,3 +1,4 @@
+using System;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,7 +15,10 @@ using TripArc.Case.Data.Case.Repositories;
 using TripArc.Common.Base.ActionFilters;
 using TripArc.Common.CQRS;
 using TripArc.Common.Extensions;
+using TripArc.Common.HttpHandlers;
+using TripArc.Common.Security.Authentication;
 using TripArc.Common.Storage.Repositories;
+using TripArc.Profile.Client.Profile;
 
 namespace TripArc.Case.Api
 {
@@ -53,6 +57,12 @@ namespace TripArc.Case.Api
         
         private void ConfigureDefaultServices(IServiceCollection services)
         {
+            services.AddScoped<IProfileApiClient, ProfileApiClient>();
+            services.AddScoped<DefaultHttpMessageHandler>();
+            services.AddHttpClient<IProfileApiClient, ProfileApiClient>(x => x.BaseAddress = new Uri("https://localhost:6001/"))
+                .AddHttpMessageHandler<DefaultHttpMessageHandler>();
+                
+            
             services.AddSettings(Configuration);
             services.AddAuthentication(Configuration);
             services.AddControllers(op => op.Filters.Add<BaseActionFilter>())
@@ -106,6 +116,7 @@ namespace TripArc.Case.Api
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseTokenExtractionMiddleware();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
