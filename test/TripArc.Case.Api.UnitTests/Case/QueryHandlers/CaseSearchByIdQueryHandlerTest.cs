@@ -32,7 +32,7 @@ namespace TripArc.Case.Api.UnitTests.Case.QueryHandlers
             var query = new CaseSearchByIdQuery { Id = testData.Id };
 
             _caseRepositoryMock
-                .Setup(repo => repo.GetByIdAsync(testData.Id))
+                .Setup(repo => repo.GetByIdAsync(testData.Id, testData.IncludeDeleted))
                 .ReturnsAsync(testData.RepositoryResult);
 
             if (testData.HandlerSearchResponse != null)
@@ -44,7 +44,7 @@ namespace TripArc.Case.Api.UnitTests.Case.QueryHandlers
 
                 var queryHandlerResult = await handler.ExecuteQueryAsync(query);
 
-                _caseRepositoryMock.Verify(x => x.GetByIdAsync(testData.Id), Times.Once);
+                _caseRepositoryMock.Verify(x => x.GetByIdAsync(testData.Id, testData.IncludeDeleted), Times.Once);
                 _mapperMock.Verify(x => x.Map<CaseSearchByIdResponse>(testData.RepositoryResult), Times.Once);
                 queryHandlerResult.Should().BeEquivalentTo(testData.HandlerSearchResponse);
             }            

@@ -1,22 +1,21 @@
 ﻿using System.ComponentModel;
 
-namespace TripArc.Case.Domain.Case.Enums
+namespace TripArc.Case.Domain.Case.Enums;
+
+public enum FollowUpType
 {
-    public enum FollowUpType
-    {
-        [Description("To Do")]
-        Todo = 1,
-        [Description("Pre Sale")]
-        PreSale = 2,
-        [Description("Post Sale")]
-        PostSale = 3,
-        [Description("Pre Sale: Follow Up 1")]
-        PreSaleFollowUp1 = 4,
-        [Description("Pre Sale: Follow Up 2")]
-        PreSaleFollowUp2 = 5,
-        [Description("Pre Sale: Follow Up 3")]
-        PreSaleFollowUp3 = 6,
-        [Description("Pre Sale: Follow Up 4")]
-        PreSaleFollowUp4 = 7
-    }
+    [Description("To Do")]
+    Todo = 1,
+    [Description("Pre Sale")]
+    PreSale = 2,
+    [Description("Post Sale")]
+    PostSale = 3,
+    [Description("Pre Sale: Follow Up 1")]
+    PreSaleFollowUp1 = 4,
+    [Description("Pre Sale: Follow Up 2")]
+    PreSaleFollowUp2 = 5,
+    [Description("Pre Sale: Follow Up 3")]
+    PreSaleFollowUp3 = 6,
+    [Description("Pre Sale: Follow Up 4")]
+    PreSaleFollowUp4 = 7
 }

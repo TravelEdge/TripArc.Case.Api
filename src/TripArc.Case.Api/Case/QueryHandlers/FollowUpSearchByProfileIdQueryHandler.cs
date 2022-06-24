@@ -1,38 +1,98 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.Extensions.Logging;
 using TripArc.Case.Domain.Case.Abstractions;
+using TripArc.Case.Domain.Case.Entities;
+using TripArc.Case.Domain.Itinerary.Abstractions;
+using TripArc.Case.Domain.Itinerary.Entities;
 using TripArc.Case.Shared.Case.Queries;
 using TripArc.Common.CQRS.Queries;
 using TripArc.Profile.Client.Profile;
 using TripArc.Profile.Shared.Profile.InputModels.Queries;
+using TripArc.Profile.Shared.Profile.Queries;
 
-namespace TripArc.Case.Api.Case.QueryHandlers
+namespace TripArc.Case.Api.Case.QueryHandlers;
+
+public class FollowUpSearchByProfileIdQueryHandler : IQueryHandler<FollowUpSearchByProfileIdQuery,
+    IEnumerable<FollowUpSearchByProfileIdResponse>>
 {
-    public class FollowUpSearchByProfileIdQueryHandler : IQueryHandler<FollowUpSearchByProfileIdQuery,
-        IEnumerable<FollowUpSearchByProfileIdResponse>>
+    private readonly ILogger<FollowUpSearchByProfileIdQueryHandler> _logger;
+    private readonly IMapper _mapper;
+    private readonly IProfileApiClient _profileApiClient;
+    private readonly IFollowUpRepository _followUpRepository;
+    private readonly IItineraryQuoteRepository _itineraryQuoteRepository;
+
+    public FollowUpSearchByProfileIdQueryHandler(ILogger<FollowUpSearchByProfileIdQueryHandler> logger, IMapper mapper,
+        IProfileApiClient profileApiClient, IFollowUpRepository followUpRepository, 
+        IItineraryQuoteRepository itineraryQuoteRepository)
     {
-        private readonly ICaseRepository _caseRepository;
-        private readonly IProfileApiClient _profileApiClient; 
+        
+        _logger = logger;
+        _mapper = mapper;
+        _profileApiClient = profileApiClient;
+        _followUpRepository = followUpRepository;
+        _itineraryQuoteRepository = itineraryQuoteRepository;
+    }
 
-        public FollowUpSearchByProfileIdQueryHandler(ICaseRepository caseRepository, IProfileApiClient profileApiClient)
-        {
-            _caseRepository = caseRepository;
-            _profileApiClient = profileApiClient;
-        }
+    public async Task<IEnumerable<FollowUpSearchByProfileIdResponse>> ExecuteQueryAsync(FollowUpSearchByProfileIdQuery query)
+    {
+        _logger.LogInformation($"Searching for the follow-ups");
+        var followUps = (await _followUpRepository.GetFollowUpsAsync(query.ProfileId)).ToList();
+        if (!followUps.Any())
+            return null;
 
-        public async Task<IEnumerable<FollowUpSearchByProfileIdResponse>> ExecuteQueryAsync(FollowUpSearchByProfileIdQuery query)
-        {
-            var result = await _caseRepository.GetFollowUps(query.ProfileId);
+        var profiles = await GetProfilesAsync(followUps.Select(x => x.ProfileId).Distinct());
+        
+        _logger.LogInformation($"Searching for the latest quotes for {followUps.Count} follow-ups");
+        var latestQuotes = await _itineraryQuoteRepository.GetLatestItineraryQuotes(
+            followUps.Select(x => x.ItineraryQuoteId).Distinct());
+        
+        followUps = JoinFollowUpWithProfileAndLatestQuotes(followUps, profiles, latestQuotes); 
 
-            var model = new ProfileGetByIdsInputModel
+        return _mapper.Map<IEnumerable<FollowUpSearchByProfileIdResponse>>(followUps);
+    }
+
+    private List<FollowUp> JoinFollowUpWithProfileAndLatestQuotes(List<FollowUp> followUps,
+        IEnumerable<ProfileGetByIdsResponse> profileInfo, IEnumerable<LatestItineraryQuote> latestItineraryQuotes)
+    {
+        _logger.LogInformation($"Joining the Follow-ups with Profile and Latest Quotes info");
+        
+        var query = 
+            from f in followUps
+            join p in profileInfo on f.ProfileId equals p.ClientProfileId into profileGroup
+            from prf in profileGroup.DefaultIfEmpty()
+            join q in latestItineraryQuotes on f.ItineraryQuoteId equals q.ItineraryQuoteId into latestQuotesGroup
+            from lq in latestQuotesGroup.DefaultIfEmpty()
+            select new FollowUp
             {
-                Ids =
-                    "71611,242826,61247,257044,68834,42719,304866,28154,307041,316827,247297,260888,317287,317467,317594,317622,319013"
+                ClientName = prf?.Name,
+                ActionId = f.ActionId,
+                CaseId = f.CaseId,
+                CaseName = f.CaseName,
+                ProfileId = f.ProfileId,
+                TripId = f.TripId,
+                TripName = f.TripName,
+                TripStartDate = f.TripStartDate,
+                FollowUpNotes = f.FollowUpNotes,
+                DueDate = f.DueDate,
+                Channel = f.HasAnAgent && prf?.ProfileAgentId > 0 ? "Agent" : prf is {IsRepeat: true} ? "Repeat" : "Direct",
+                Flagged = f.Flagged,
+                ItineraryQuoteId = f.ItineraryQuoteId,
+                MostRecentItinerary = lq?.MostRecentItinerary,
+                LastQuotedDate = lq?.QuotedDate,
+                LastQuotedPrice = lq?.QuotedPrice
             };
-            var profiles = await _profileApiClient.GetByProfileIdsAsync(model);
-            
-            return Enumerable.Empty<FollowUpSearchByProfileIdResponse>();
-        }
+        return query.ToList();
+    }
+    
+    private async Task<IEnumerable<ProfileGetByIdsResponse>> GetProfilesAsync(IEnumerable<int> profileIds)
+    {
+        var model = new ProfileGetByIdsInputModel { Ids = string.Join(',', profileIds) };
+        
+        _logger.LogInformation($"Requesting Profile info to Profile service - IDs: {model.Ids}");
+        var profiles = await _profileApiClient.GetByProfileIdsAsync(model);
+        return profiles;
     }
 }

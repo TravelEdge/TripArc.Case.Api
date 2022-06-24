@@ -1,6 +1,5 @@
-﻿namespace TripArc.Case.Shared.Case.Queries
+﻿namespace TripArc.Case.Shared.Case.Queries;
+
+public class CaseSearchByIdResponse : CaseBaseResponse
 {
-    public class CaseSearchByIdResponse : CaseBaseResponse
-    {
-    }
 }
