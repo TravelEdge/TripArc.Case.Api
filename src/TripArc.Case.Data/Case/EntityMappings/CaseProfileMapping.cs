@@ -1,16 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TripArc.Case.Domain.Case.Entities;
+﻿using Entities = TripArc.Case.Domain.CaseProfile.Entities;
 
-namespace TripArc.Case.Data.Case.EntityMappings
+namespace TripArc.Case.Data.Case.EntityMappings;
+
+public class CaseProfileMapping : IEntityTypeConfiguration<Entities.CaseProfile>
 {
-    public class CaseProfileMapping : IEntityTypeConfiguration<CaseProfile>
+    public void Configure(EntityTypeBuilder<Entities.CaseProfile> builder)
     {
-        public void Configure(EntityTypeBuilder<CaseProfile> builder)
-        {
-            builder.ToTable("CaseProfiles");
+        builder.ToTable("CaseProfiles");
 
-            builder.HasKey(x => x.CaseProfileId);                        
-        }
+        builder.HasKey(x => x.CaseProfileId);                        
     }
 }

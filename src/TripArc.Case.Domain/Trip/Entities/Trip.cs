@@ -1,9 +1,12 @@
-﻿using System;
-
-namespace TripArc.Case.Domain.Trip.Entities
+﻿namespace TripArc.Case.Domain.Trip.Entities
 {
     public class Trip
     {
+        // public Trip()
+        // {
+        //     Cases = new HashSet<Case.Entities.Case>();
+        // }
+        
         public int TripId { get; set; }
         public int CompanyId { get; set; }
         public string TripReference { get; set; }
@@ -28,6 +31,8 @@ namespace TripArc.Case.Domain.Trip.Entities
         public int? TripLockId { get; set; }
         public int? ApprovalRequestId { get; set; }
         public int? TramsresCardNum { get; set; }
-        public bool PassportAlertDismiss { get; set; }        
+        public bool PassportAlertDismiss { get; set; }
+        
+        public virtual ICollection<Case.Entities.Case> Cases { get; set; }
     }
 }

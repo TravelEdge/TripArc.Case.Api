@@ -46,9 +46,9 @@
     <Reference Include="TripArc.Profile.Client">
       <HintPath>..\..\..\TripArc.Profile.Api\src\TripArc.Profile.Client\bin\Debug\net6.0\TripArc.Profile.Client.dll</HintPath>
     </Reference>
-    <Reference Include="TripArc.Profile.Shared">
+    <Reference Include="TripArc.Profile.Client">
       <HintPath>..\..\..\TripArc.Profile.Api\src\TripArc.Profile.Shared\bin\Debug\net6.0\TripArc.Profile.Shared.dll</HintPath>
-    </Reference>
+    </Reference>    
   </ItemGroup>
 
 </Project>

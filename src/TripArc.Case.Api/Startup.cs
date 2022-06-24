@@ -12,6 +12,7 @@ using TripArc.Case.Api.Case.QueryHandlers;
 using TripArc.Case.Api.Extensions;
 using TripArc.Case.Data.Case.AutoMapperProfiles;
 using TripArc.Case.Data.Case.Repositories;
+using TripArc.Common.Abstractions.Repository;
 using TripArc.Common.Base.ActionFilters;
 using TripArc.Common.CQRS;
 using TripArc.Common.Extensions;
@@ -20,104 +21,104 @@ using TripArc.Common.Security.Authentication;
 using TripArc.Common.Storage.Repositories;
 using TripArc.Profile.Client.Profile;
 
-namespace TripArc.Case.Api
+namespace TripArc.Case.Api;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        Configuration = configuration;
+    }
 
-        public IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            ConfigureDefaultServices(services);
-            ConfigureDatabaseServices(services);
-            ConfigureRepositories(services);
-            ConfigureUnitOfWork(services);
-            ConfigureCommonServices(services);
+    public void ConfigureServices(IServiceCollection services)
+    {
+        ConfigureDefaultServices(services);
+        ConfigureDatabaseServices(services);
+        ConfigureRepositories(services);
+        ConfigureUnitOfWork(services);
+        ConfigureCommonServices(services);
 
-            services.AddAutoMapper(typeof(CaseMapperProfile).Assembly);
-            services.RegisterCqrsDependencies(Configuration)
-                .RegisterApplicationQueries<CaseSearchByIdQueryHandler>();
+        services.AddAutoMapper(typeof(CaseMapperProfile).Assembly);
+        services.RegisterCqrsDependencies(Configuration)
+            .RegisterApplicationQueries<CaseSearchByIdQueryHandler>();
             
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "TripArc.Case.Api", Version = "v1" });
-            });
-        }
-        
-        protected virtual void ConfigureUnitOfWork(IServiceCollection services)
+        services.AddControllers();
+        services.AddSwaggerGen(c =>
         {
-            services.AddUnitOfWork();
-        }
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "TripArc.Case.Api", Version = "v1" });
+        });
+    }
         
-        private void ConfigureDefaultServices(IServiceCollection services)
-        {
-            services.AddScoped<IProfileApiClient, ProfileApiClient>();
-            services.AddScoped<DefaultHttpMessageHandler>();
-            services.AddHttpClient<IProfileApiClient, ProfileApiClient>(x => x.BaseAddress = new Uri("https://localhost:6001/"))
-                .AddHttpMessageHandler<DefaultHttpMessageHandler>();
+    protected virtual void ConfigureUnitOfWork(IServiceCollection services)
+    {
+        services.AddUnitOfWork();
+    }
+        
+    private void ConfigureDefaultServices(IServiceCollection services)
+    {
+        services.AddScoped<IProfileApiClient, ProfileApiClient>();
+        services.AddScoped<DefaultHttpMessageHandler>();
+        services.AddHttpClient<IProfileApiClient, ProfileApiClient>(x => x.BaseAddress = new Uri("https://localhost:6001/"))
+            .AddHttpMessageHandler<DefaultHttpMessageHandler>();
                 
             
-            services.AddSettings(Configuration);
-            services.AddAuthentication(Configuration);
-            services.AddControllers(op => op.Filters.Add<BaseActionFilter>())
-                .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>())
-                .ConfigureApiBehaviorOptions(op => op.SuppressModelStateInvalidFilter = true);
-            services.AddApiVersioning(options =>
+        services.AddSettings(Configuration);
+        services.AddAuthentication(Configuration);
+        services.AddControllers(op => op.Filters.Add<BaseActionFilter>())
+            .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>())
+            .ConfigureApiBehaviorOptions(op => op.SuppressModelStateInvalidFilter = true);
+        services.AddApiVersioning(options =>
+        {
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.ReportApiVersions = true;
+            options.AssumeDefaultVersionWhenUnspecified = true;
+        });
+        services.AddVersionedApiExplorer(
+            options =>
             {
-                options.DefaultApiVersion = new ApiVersion(1, 0);
-                options.ReportApiVersions = true;
-                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
             });
-            services.AddVersionedApiExplorer(
-                options =>
-                {
-                    options.GroupNameFormat = "'v'VVV";
-                    options.SubstituteApiVersionInUrl = true;
-                });
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "TripArc.Case.Api", Version = "v1"});
-            });
-            services.AddApiVersioning();
-        }        
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo {Title = "TripArc.Case.Api", Version = "v1"});
+        });
+        services.AddApiVersioning();
+    }        
 
-        protected virtual void ConfigureCommonServices(IServiceCollection services)
+    protected virtual void ConfigureCommonServices(IServiceCollection services)
+    {
+        services.ConfigureCommonServices();
+    }
+        
+    protected virtual void ConfigureDatabaseServices(IServiceCollection services)
+    {
+        services.AddDataContext(Configuration);
+    }
+        
+    protected void ConfigureRepositories(IServiceCollection services)
+    {
+        services.AddApplicationRepositories<CaseRepository>(typeof(Repository<>));
+        services.AddApplicationRepositories<FollowUpRepository>(typeof(IRepository));
+    }        
+        
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            services.ConfigureCommonServices();
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TripArc.Case.Api v1"));
         }
-        
-        protected virtual void ConfigureDatabaseServices(IServiceCollection services)
-        {
-            services.AddDataContext(Configuration);
-        }
-        
-        protected void ConfigureRepositories(IServiceCollection services)
-        {
-            services.AddApplicationRepositories<CaseRepository>(typeof(Repository<>));
-        }        
-        
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TripArc.Case.Api v1"));
-            }
             
-            app.UseSerilogRequestLogging();
-            app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseTokenExtractionMiddleware();
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
-        }
+        app.UseSerilogRequestLogging();
+        app.UseHttpsRedirection();
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseTokenExtractionMiddleware();
+        app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
     }
 }
