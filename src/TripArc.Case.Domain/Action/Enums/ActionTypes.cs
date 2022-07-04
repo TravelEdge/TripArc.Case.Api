@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace TripArc.Case.Domain.Action.Enums;
+﻿namespace TripArc.Case.Domain.Action.Enums;
 
 public enum ActionTypes
 {

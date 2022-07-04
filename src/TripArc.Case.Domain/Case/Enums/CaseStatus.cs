@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace TripArc.Case.Domain.Case.Enums;
+﻿namespace TripArc.Case.Domain.Case.Enums;
 
 public enum CaseStatus
 {

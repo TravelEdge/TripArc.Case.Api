@@ -2,11 +2,6 @@
 {
     public class Trip
     {
-        // public Trip()
-        // {
-        //     Cases = new HashSet<Case.Entities.Case>();
-        // }
-        
         public int TripId { get; set; }
         public int CompanyId { get; set; }
         public string TripReference { get; set; }
@@ -33,6 +28,6 @@
         public int? TramsresCardNum { get; set; }
         public bool PassportAlertDismiss { get; set; }
         
-        public virtual ICollection<Case.Entities.Case> Cases { get; set; }
+        public ICollection<Case.Entities.Case> Cases { get; set; }
     }
 }

@@ -1,0 +1,11 @@
+﻿global using System.Collections.Generic;
+global using System.Threading.Tasks;
+global using System.Linq;
+global using AutoMapper;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Extensions.Logging;
+global using TripArc.Common.Base.Controller;
+global using TripArc.Common.Base.Response;
+global using TripArc.Common.CQRS.Queries;
+global using TripArc.Common.Validators;

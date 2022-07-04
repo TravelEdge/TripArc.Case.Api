@@ -1,8 +1,5 @@
-﻿using System.Threading.Tasks;
-using AutoMapper;
-using TripArc.Case.Domain.Case.Abstractions;
+﻿using TripArc.Case.Domain.Case.Abstractions;
 using TripArc.Case.Shared.Case.Queries;
-using TripArc.Common.CQRS.Queries;
 
 namespace TripArc.Case.Api.Case.QueryHandlers;
 

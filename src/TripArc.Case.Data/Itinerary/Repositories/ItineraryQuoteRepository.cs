@@ -1,6 +1,5 @@
-﻿using TripArc.Case.Domain.Itinerary.Abstractions;
-using TripArc.Case.Domain.Itinerary.Entities;
-using TripArc.Common.Storage.Repositories;
+﻿using TripArc.Case.Domain.ItineraryQuote.Abstractions;
+using TripArc.Case.Domain.ItineraryQuote.Entities;
 
 namespace TripArc.Case.Data.Itinerary.Repositories;
 
@@ -13,7 +12,7 @@ public class ItineraryQuoteRepository : Repository<ItineraryQuote>, IItineraryQu
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<LatestItineraryQuote>> GetLatestItineraryQuotes(IEnumerable<int> itineraryQuoteIds)
+    public async Task<IEnumerable<LatestItineraryQuote>> GetLatestItineraryQuotes(List<int> itineraryQuoteIds)
     {
         var query =
             from iq in _dbContext.ItineraryQuotes

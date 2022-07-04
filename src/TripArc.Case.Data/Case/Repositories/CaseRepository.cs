@@ -1,5 +1,4 @@
 ﻿using TripArc.Case.Domain.Case.Abstractions;
-using TripArc.Common.Storage.Repositories;
 using Entities = TripArc.Case.Domain.Case.Entities;
 
 namespace TripArc.Case.Data.Case.Repositories;

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TripArc.Case.Shared.Case.Queries;
+﻿namespace TripArc.Case.Shared.Case.Queries;
 
 public class CaseBaseResponse
 {

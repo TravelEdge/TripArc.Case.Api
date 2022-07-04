@@ -1,7 +1,4 @@
-﻿using System;
-using TripArc.Common.Abstractions.Entity;
-
-namespace TripArc.Case.Domain.CaseProfile.Entities;
+﻿namespace TripArc.Case.Domain.CaseProfile.Entities;
 
 public class CaseProfile : ISoftDeleteEntity
 {

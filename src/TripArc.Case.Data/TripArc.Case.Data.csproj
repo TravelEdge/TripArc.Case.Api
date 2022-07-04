@@ -14,10 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="..\TripArc.Case.Domain\TripArc.Case.Domain.csproj" />
     <ProjectReference Include="..\TripArc.Case.Shared\TripArc.Case.Shared.csproj" />
-  </ItemGroup>  
-
-  <ItemGroup>
-    <Folder Include="CaseProfile\Mappings" />
   </ItemGroup>
 
 </Project>
