@@ -12,6 +12,6 @@ public enum CaseStatus
     Retired = 50,
     Deleted = 60,
     Cancelled = 99,
-    [Description("Lad Before Time")]
+    [Description("Land Before Time")]
     LandBeforeTime = 100        
 }
