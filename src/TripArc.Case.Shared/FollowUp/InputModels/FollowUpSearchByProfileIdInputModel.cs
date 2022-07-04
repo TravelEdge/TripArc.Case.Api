@@ -8,7 +8,7 @@ public class FollowUpSearchByProfileIdInputModel
     public int ProfileId { get; set; }
     
     public DateTime DueDate { get; set; }
-    //public string CaseStatus { get; set; }
+    public string CaseStatus { get; set; }
     public string ClientName { get; set; }
     public DateTime TravelDate { get; set; }
     public string FollowUpType { get; set; }
