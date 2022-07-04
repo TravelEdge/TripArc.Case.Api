@@ -1,14 +1,7 @@
-﻿using TripArc.Common.Abstractions.Entity;
-
-namespace TripArc.Case.Domain.Case.Entities;
+﻿namespace TripArc.Case.Domain.Case.Entities;
 
 public class Case : ISoftDeleteEntity
 {
-    // public Case()
-    // {
-    //     CaseActions = new HashSet<CaseActions>();
-    // }
-    
     public int CaseId { get; set; }
     public int? ParentCaseId { get; set; }
     public string CaseReference { get; set; }
@@ -23,6 +16,6 @@ public class Case : ISoftDeleteEntity
     public int? TripId { get; set; }
     public bool Deleted { get; set; }
     
-    public virtual Trip.Entities.Trip Trip { get; set; }
-    public virtual ICollection<CaseActions> CaseActions { get; set; }
+    public Trip.Entities.Trip Trip { get; set; }
+    public ICollection<CaseAction.Entities.CaseAction> CaseActions { get; set; }
 }

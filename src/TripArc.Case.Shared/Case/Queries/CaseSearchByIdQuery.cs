@@ -1,6 +1,4 @@
-﻿using TripArc.Common.CQRS.Queries;
-
-namespace TripArc.Case.Shared.Case.Queries;
+﻿namespace TripArc.Case.Shared.Case.Queries;
 
 public class CaseSearchByIdQuery : IQuery
 {

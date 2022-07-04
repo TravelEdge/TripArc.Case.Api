@@ -1,4 +1,4 @@
-﻿using TripArc.Case.Domain.Itinerary.Entities;
+﻿using TripArc.Case.Domain.ItineraryQuote.Entities;
 
 namespace TripArc.Case.Data.Itinerary.EntityMappings;
 

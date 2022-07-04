@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-namespace TripArc.Case.Data.Trip.EntityMappings;
+﻿namespace TripArc.Case.Data.Trip.EntityMappings;
 
 public class TripMapping : IEntityTypeConfiguration<Domain.Trip.Entities.Trip>
 {

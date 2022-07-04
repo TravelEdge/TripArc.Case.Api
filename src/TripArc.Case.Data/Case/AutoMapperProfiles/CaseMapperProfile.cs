@@ -12,8 +12,5 @@ public class CaseMapperProfile : AutoMapper.Profile
         CreateMap<Entities.Case, CaseSearchByIdResponse>();
 
         CreateMap<CaseSearchByIdInputModel, CaseSearchByIdQuery>();
-        CreateMap<FollowUpSearchByProfileIdInputModel, FollowUpSearchByProfileIdQuery>();
-
-        CreateMap<Entities.FollowUp, FollowUpSearchByProfileIdResponse>();
     }
 }

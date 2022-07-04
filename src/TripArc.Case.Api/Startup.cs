@@ -12,6 +12,8 @@ using TripArc.Case.Api.Case.QueryHandlers;
 using TripArc.Case.Api.Extensions;
 using TripArc.Case.Data.Case.AutoMapperProfiles;
 using TripArc.Case.Data.Case.Repositories;
+using TripArc.Case.Data.FollowUp.Repositories;
+using TripArc.Case.Domain.Common.Settings;
 using TripArc.Common.Abstractions.Repository;
 using TripArc.Common.Base.ActionFilters;
 using TripArc.Common.CQRS;
@@ -58,17 +60,14 @@ public class Startup
         
     private void ConfigureDefaultServices(IServiceCollection services)
     {
-        services.AddScoped<IProfileApiClient, ProfileApiClient>();
-        services.AddScoped<DefaultHttpMessageHandler>();
-        services.AddHttpClient<IProfileApiClient, ProfileApiClient>(x => x.BaseAddress = new Uri("https://localhost:6001/"))
-            .AddHttpMessageHandler<DefaultHttpMessageHandler>();
-                
-            
         services.AddSettings(Configuration);
         services.AddAuthentication(Configuration);
         services.AddControllers(op => op.Filters.Add<BaseActionFilter>())
             .AddFluentValidation(x => x.RegisterValidatorsFromAssemblyContaining<Startup>())
             .ConfigureApiBehaviorOptions(op => op.SuppressModelStateInvalidFilter = true);
+        
+        services.AddProfileClient(Configuration.GetSection(nameof(ProfileApiSettings)).Get<ProfileApiSettings>());
+        
         services.AddApiVersioning(options =>
         {
             options.DefaultApiVersion = new ApiVersion(1, 0);

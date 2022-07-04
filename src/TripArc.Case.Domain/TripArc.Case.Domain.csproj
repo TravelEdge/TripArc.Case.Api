@@ -7,9 +7,5 @@
   <ItemGroup>  
     <PackageReference Include="TripArc.Common.Abstractions" Version="$(TripArcCommonVersion)" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ActionQuoteReference\Entities" />
-  </ItemGroup>
   
 </Project>

@@ -4,7 +4,7 @@ using AutoMapper;
 using FluentAssertions;
 using Moq;
 using TripArc.Case.Api.Case.QueryHandlers;
-using TripArc.Case.Api.UnitTests.Common;
+using TripArc.Case.Api.UnitTests.Case.TestData;
 using TripArc.Case.Domain.Case.Abstractions;
 using TripArc.Case.Shared.Case.Queries;
 using Xunit;
@@ -16,7 +16,6 @@ namespace TripArc.Case.Api.UnitTests.Case.QueryHandlers
     {
         private readonly Mock<ICaseRepository> _caseRepositoryMock;
         private readonly Mock<IMapper> _mapperMock;
-        
 
         public CaseSearchByIdQueryHandlerTest()
         {
