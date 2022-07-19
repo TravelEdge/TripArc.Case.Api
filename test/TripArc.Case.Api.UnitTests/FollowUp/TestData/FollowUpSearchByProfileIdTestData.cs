@@ -9,7 +9,7 @@ namespace TripArc.Case.Api.UnitTests.FollowUp.TestData;
 public class FollowUpSearchByProfileIdTestData
 {
     public int ProfileId { get; init; }
-    public List<Domain.FollowUp.Entities.FollowUp> FollowUpRepositoryResult { get; init; } = new();
+    public List<Domain.FollowUp.DTO.FollowUp> FollowUpRepositoryResult { get; init; } = new();
     public List<LatestItineraryQuote> ItineraryQuoteRepositoryResult { get; init; } = new();
     public List<FollowUpSearchByProfileIdResponse> HandlerSearchResponse { get; init; } = new();
     public List<ProfileGetFollowUpInfoResponse> ProfileClientApiResponse { get; init; } = new();

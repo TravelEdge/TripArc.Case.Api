@@ -1,12 +1,7 @@
-﻿using System.Collections.Generic;
+﻿namespace TripArc.Case.Domain.FollowUp.DTO;
 
-namespace TripArc.Case.Shared.FollowUp.InputModels;
-
-[ExcludeFromCodeCoverage]
-[ModelBinder(BinderType = typeof(RequestModelBinder<FollowUpSearchByProfileIdInputModel>))]    
-public class FollowUpSearchByProfileIdInputModel
+public class GetFollowUpRepositoryParameters
 {
-    [JsonPropertyName("id")]
     public int ProfileId { get; set; }
     public DateTime? DueDateFrom { get; set; }
     public DateTime? DueDateTo { get; set; }
@@ -21,5 +16,5 @@ public class FollowUpSearchByProfileIdInputModel
     public List<int> CaseStatus { get; set; }
     public List<int> FollowUpType { get; set; }
     public bool Flagged { get; set; }
-    public string SortColumns { get; set; }
+    public string SortColumns { get; set; }    
 }

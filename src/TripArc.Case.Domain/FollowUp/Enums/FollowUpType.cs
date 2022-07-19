@@ -2,6 +2,8 @@
 
 public enum FollowUpType
 {
+    [Description("None")]
+    None = 0,    
     [Description("To Do")]
     Todo = 1,
     [Description("Pre Sale")]

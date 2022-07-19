@@ -1,5 +1,7 @@
 ﻿
 
+using TripArc.Case.Domain.FollowUp.Enums;
+
 namespace TripArc.Case.Domain.Action.Entities;
 
 public class Action : ISoftDeleteEntity
@@ -23,6 +25,7 @@ public class Action : ISoftDeleteEntity
     public int? QuoteAgentActionId { get; set; }
     public int? FollowUpActionedBy { get; set; }
     public int? FollowUpTypeId { get; set; }
+    public string FollowUpType { get; set; }
     public bool Deleted { get; set; }
     
     public ICollection<ActionQuoteReference.Entities.ActionQuoteReference> ActionQuoteReferences { get; set; }
