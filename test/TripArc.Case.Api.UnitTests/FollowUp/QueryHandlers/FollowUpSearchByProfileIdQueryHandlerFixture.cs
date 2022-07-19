@@ -5,6 +5,7 @@ using Moq;
 using TripArc.Case.Api.FollowUp.QueryHandlers;
 using TripArc.Case.Api.UnitTests.FollowUp.TestData;
 using TripArc.Case.Domain.FollowUp.Abstractions;
+using TripArc.Case.Domain.FollowUp.DTO;
 using TripArc.Case.Domain.ItineraryQuote.Abstractions;
 using TripArc.Case.Shared.FollowUp.Queries;
 using TripArc.Common.CQRS.Queries;
@@ -34,7 +35,7 @@ public abstract class FollowUpSearchByProfileIdQueryHandlerFixture
     protected void Configure_Mocks(FollowUpSearchByProfileIdTestData testData, FollowUpSearchByProfileIdQuery query)
     {
         MockFollowUpRepository
-            .Setup(repo => repo.GetFollowUpsAsync(query.ProfileId))
+            .Setup(repo => repo.GetFollowUpsAsync(It.IsAny<GetFollowUpRepositoryParameters>()))
             .ReturnsAsync(testData.FollowUpRepositoryResult);
         MockItineraryQuoteRepository
             .Setup(repo => repo.GetLatestItineraryQuotes(It.IsAny<List<int>>()))
@@ -42,18 +43,18 @@ public abstract class FollowUpSearchByProfileIdQueryHandlerFixture
         MockProfileApiClient.Setup(client => client.GetProfileFollowUpInfoAsync(It.IsAny<ProfileGetFollowUpInfoInputModel>()))
             .ReturnsAsync(testData.ProfileClientApiResponse);
         MockMapper.Setup(mapper =>
-                mapper.Map<IEnumerable<FollowUpSearchByProfileIdResponse>>(It.IsAny<List<Domain.FollowUp.Entities.FollowUp>>()))
+                mapper.Map<IEnumerable<FollowUpSearchByProfileIdResponse>>(It.IsAny<List<Domain.FollowUp.DTO.FollowUp>>()))
             .Returns(testData.HandlerSearchResponse);        
     }
     
     protected void Validate_Mock_Executions(FollowUpSearchByProfileIdTestData testData, FollowUpSearchByProfileIdQuery query)
     {
-        MockFollowUpRepository.Verify(repo => repo.GetFollowUpsAsync(query.ProfileId), testData.ExecutionTimes);
+        MockFollowUpRepository.Verify(repo => repo.GetFollowUpsAsync(It.IsAny<GetFollowUpRepositoryParameters>()), testData.ExecutionTimes);
         MockItineraryQuoteRepository.Verify(repo =>
             repo.GetLatestItineraryQuotes(It.IsAny<List<int>>()), testData.ExecutionTimes);
         MockProfileApiClient.Verify(client => client.GetProfileFollowUpInfoAsync(
             It.IsAny<ProfileGetFollowUpInfoInputModel>()), testData.ExecutionTimes);
         MockMapper.Verify(map => map.Map<IEnumerable<FollowUpSearchByProfileIdResponse>>(
-            It.IsAny<List<Domain.FollowUp.Entities.FollowUp>>()), testData.ExecutionTimes);
+            It.IsAny<List<Domain.FollowUp.DTO.FollowUp>>()), testData.ExecutionTimes);
     }    
 }

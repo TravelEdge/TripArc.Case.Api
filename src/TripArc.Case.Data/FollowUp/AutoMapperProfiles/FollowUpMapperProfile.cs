@@ -9,6 +9,8 @@ public class FollowUpMapperProfile : AutoMapper.Profile
     {
         CreateMap<FollowUpSearchByProfileIdInputModel, FollowUpSearchByProfileIdQuery>();
 
-        CreateMap<Domain.FollowUp.Entities.FollowUp, FollowUpSearchByProfileIdResponse>();        
+        CreateMap<Domain.FollowUp.DTO.FollowUp, FollowUpSearchByProfileIdResponse>();
+
+        CreateMap<FollowUpSearchByProfileIdQuery, Domain.FollowUp.DTO.GetFollowUpRepositoryParameters>();
     }
 }

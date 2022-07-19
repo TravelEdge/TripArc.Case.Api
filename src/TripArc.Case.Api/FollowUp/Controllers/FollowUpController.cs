@@ -17,7 +17,7 @@ public class FollowUpController : BaseAPIController<FollowUpController>
         _queryDispatcher = queryDispatcher;
         _mapper = mapper;
     }
-    
+
     [HttpGet("profile/{id}")]
     public async Task GetFollowUpsByProfileIdAsync(FollowUpSearchByProfileIdInputModel model)
     {
@@ -27,5 +27,5 @@ public class FollowUpController : BaseAPIController<FollowUpController>
             return await _queryDispatcher
                 .ExecuteQueryAsync<FollowUpSearchByProfileIdQuery, IEnumerable<FollowUpSearchByProfileIdResponse>>(query);
         });
-    }    
+    }
 }

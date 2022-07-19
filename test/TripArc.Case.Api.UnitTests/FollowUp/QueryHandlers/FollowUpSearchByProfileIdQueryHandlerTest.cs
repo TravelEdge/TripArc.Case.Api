@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using TripArc.Case.Api.UnitTests.FollowUp.TestData;
+using TripArc.Case.Domain.FollowUp.DTO;
 using TripArc.Case.Domain.ItineraryQuote.Entities;
 using TripArc.Case.Shared.FollowUp.Queries;
 using TripArc.Profile.Shared.Profile.Queries;
 using Xunit;
-using FollowUpEntities = TripArc.Case.Domain.FollowUp.Entities;
 
 namespace TripArc.Case.Api.UnitTests.FollowUp.QueryHandlers;
 
@@ -20,12 +20,12 @@ public class FollowUpSearchByProfileIdQueryHandlerTest : FollowUpSearchByProfile
         var query = new FollowUpSearchByProfileIdQuery {ProfileId = -1};
 
         MockFollowUpRepository
-            .Setup(repo => repo.GetFollowUpsAsync(query.ProfileId))
-            .ReturnsAsync(new List<FollowUpEntities.FollowUp>());
+            .Setup(repo => repo.GetFollowUpsAsync(It.IsAny<GetFollowUpRepositoryParameters>()))
+            .ReturnsAsync(new List<Domain.FollowUp.DTO.FollowUp>());
 
         var queryHandlerResult = await Build_Query_Handler().ExecuteQueryAsync(query);
 
-        MockFollowUpRepository.Verify(repo => repo.GetFollowUpsAsync(query.ProfileId), Times.Once);
+        MockFollowUpRepository.Verify(repo => repo.GetFollowUpsAsync(It.IsAny<GetFollowUpRepositoryParameters>()), Times.Once);
         queryHandlerResult.Should().BeNull();
     }
 
@@ -52,7 +52,7 @@ public class FollowUpSearchByProfileIdQueryHandlerTest : FollowUpSearchByProfile
             new FollowUpSearchByProfileIdTestData
             {
                 ProfileId = 101,
-                FollowUpRepositoryResult = new List<Domain.FollowUp.Entities.FollowUp>
+                FollowUpRepositoryResult = new List<Domain.FollowUp.DTO.FollowUp>
                 {
                     new() { ClientName = "Client name test", ItineraryQuoteId = 1001 }
                 },
