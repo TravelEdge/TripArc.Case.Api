@@ -1,0 +1,155 @@
+name: $(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+pool:
+  vmImage: ubuntu-latest
+
+variables: 
+  Major: '1'
+  Minor: '1'
+  Patch: $[counter(variables['minor'], 1)]
+  NUGET_PACKAGES: $(Pipeline.Workspace)/.nuget/packages
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: 'az-docker'
+  imageRepository: 'triparccase'
+  containerRegistry: 'triparc.azurecr.io'
+  dockerfilePath: 'src/TripArc.Case.API/Dockerfile'
+  tag: '$(build.buildNumber)'
+  isPublish: $[eq(variables['Build.SourceBranch'], 'refs/heads/Publish')]
+
+resources:
+- repo: self
+
+trigger:
+  batch: 'true'
+  branches:
+    include:
+    - develop
+    - Publish
+
+pr:
+- develop
+- Publish
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    version: '6.0.x'
+
+#- task: Cache@2
+#  inputs:
+#    key: 'nuget | "$(Agent.OS)" | **/packages.lock.json,!**/bin/**,!**/obj/**'
+#    restoreKeys: |
+#       nuget | "$(Agent.OS)"
+#       nuget
+#    path: $(NUGET_PACKAGES)
+#  displayName: Cache NuGet packages
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    feedsToUse: config
+    nugetConfigPath: $(Build.SourcesDirectory)/Nuget.Pipeline.Config
+    noCache: true
+    vstsFeed: '8b58a84e-b80d-45fc-856f-271013e65507'
+    includeNuGetOrg: true
+  displayName: 'dotnet restore'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+  displayName: 'dotnet build'
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(buildConfiguration) --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura'
+    projects: '**/*Tests/*.csproj'
+    publishTestResults: true
+
+- task: reportgenerator@5
+  inputs:
+    reports: '$(Agent.TempDirectory)/**/*.cobertura.xml'
+    targetdir: '$(Build.SourcesDirectory)/CoverageResults'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage report'
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/CoverageResults/Cobertura.xml'
+
+- pwsh: |
+    $packageVersion = '$(Major).$(Minor).$(Patch)-beta'
+    Write-Host "##vso[task.setvariable variable=PackageVersion;]$packageVersion"
+  condition: eq(variables.isPublish, 'false')
+  displayName: 'Set the Version Name for Pre-Release Version'
+
+- pwsh: |
+    $packageVersion = '$(Major).$(Minor).$(Patch)'
+    Write-Host "##vso[task.setvariable variable=PackageVersion;]$packageVersion"
+  condition: eq(variables.isPublish, 'true')
+  displayName: 'Set the Version Name'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: pack
+    packagesToPack: '**/*.csproj'
+    versioningScheme: byEnvVar
+    versionEnvVar: 'PackageVersion'
+  displayName: 'dotnet pack'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True
+  displayName: 'dotnet publish'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'TripArc.Case'
+  displayName: 'Publish Pipeline Artifact'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+- task: NuGetAuthenticate@0
+  displayName: 'NuGet Authenticate'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+- task: DotNetCoreCLI@2
+  displayName: 'Push NuGet Packages'
+  inputs:
+    command: push
+    nuGetFeedType: internal
+    publishVstsFeed: 'trip-arc'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+- task: Docker@2
+  displayName: Build an image for container registry
+  inputs:
+    command: build
+    repository: $(imageRepository)
+    dockerfile: $(dockerfilePath)
+    buildContext: $(Build.Repository.LocalPath)
+    arguments: --build-arg FEED_ACCESSTOKEN=$(PAT)
+    containerRegistry: $(dockerRegistryServiceConnection)
+    tags: |
+      $(tag)
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
+- task: Docker@2
+  displayName: Push an image to container registry
+  inputs:
+    command: push
+    repository: $(imageRepository)
+    dockerfile: $(dockerfilePath)
+    containerRegistry: $(dockerRegistryServiceConnection)
+    tags: |
+      $(tag)
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+
