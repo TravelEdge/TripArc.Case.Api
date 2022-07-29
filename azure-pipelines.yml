@@ -12,7 +12,7 @@ variables:
   dockerRegistryServiceConnection: 'az-docker'
   imageRepository: 'triparccase'
   containerRegistry: 'triparc.azurecr.io'
-  dockerfilePath: 'src/TripArc.Case.API/Dockerfile'
+  dockerfilePath: 'src/TripArc.Case.Api/Dockerfile'
   buildConfiguration: 'Release'
   tag: '$(build.buildNumber)'
   isPublish: $[eq(variables['Build.SourceBranch'], 'refs/heads/Publish')]
