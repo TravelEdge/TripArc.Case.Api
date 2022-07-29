@@ -23,13 +23,8 @@ public static class ServiceCollectionsExtensions
         
     public static void AddDataContext(this IServiceCollection services, IConfiguration configuration)
     {
-#if DEBUG
         services.AddDbContext<CaseContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("TMX")).EnableSensitiveDataLogging());
-#else
-                services.AddDbContext<ProfileContext>(options =>
-                    options.UseSqlServer(configuration.GetConnectionString("TMX")));
-#endif
     }
         
     public static void AddUnitOfWork(this IServiceCollection services)
