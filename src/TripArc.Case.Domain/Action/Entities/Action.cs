@@ -1,8 +1,4 @@
-﻿
-
-using TripArc.Case.Domain.FollowUp.Enums;
-
-namespace TripArc.Case.Domain.Action.Entities;
+﻿namespace TripArc.Case.Domain.Action.Entities;
 
 public class Action : ISoftDeleteEntity
 {

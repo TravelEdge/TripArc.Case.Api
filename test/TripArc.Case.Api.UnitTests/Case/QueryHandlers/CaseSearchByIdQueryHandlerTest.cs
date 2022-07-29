@@ -4,9 +4,9 @@ using AutoMapper;
 using FluentAssertions;
 using Moq;
 using TripArc.Case.Api.Case.QueryHandlers;
-using TripArc.Case.Api.UnitTests.Case.TestData;
 using TripArc.Case.Domain.Case.Abstractions;
 using TripArc.Case.Shared.Case.Queries;
+using TripArc.Common.Test.UnitTest.SearchData;
 using Xunit;
 using Entities = TripArc.Case.Domain.Case.Entities;
 

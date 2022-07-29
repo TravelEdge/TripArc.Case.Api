@@ -2,7 +2,7 @@
 	<PropertyGroup Label="NET Core and packages dependency versions">
 		<NetCoreTargetVersion>net6.0</NetCoreTargetVersion>
 		<LanguageVersion>10</LanguageVersion>
-		<TripArcCommonVersion>1.1.22-beta</TripArcCommonVersion>
+		<TripArcCommonVersion>1.1.23-beta</TripArcCommonVersion>
 		<TripArcProfileVersion>1.1.127-beta</TripArcProfileVersion>
 	</PropertyGroup>
 </Project>
