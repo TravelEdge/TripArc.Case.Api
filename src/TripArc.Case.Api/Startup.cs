@@ -1,8 +1,6 @@
-using System;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -18,10 +16,8 @@ using TripArc.Common.Abstractions.Repository;
 using TripArc.Common.Base.ActionFilters;
 using TripArc.Common.CQRS;
 using TripArc.Common.Extensions;
-using TripArc.Common.HttpHandlers;
 using TripArc.Common.Security.Authentication;
 using TripArc.Common.Storage.Repositories;
-using TripArc.Profile.Client.Profile;
 
 namespace TripArc.Case.Api;
 
