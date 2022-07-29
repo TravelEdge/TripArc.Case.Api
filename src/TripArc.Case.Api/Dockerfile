@@ -11,7 +11,7 @@ WORKDIR /src
 RUN curl -L https://raw.githubusercontent.com/Microsoft/artifacts-credprovider/master/helpers/installcredprovider.sh | sh
 COPY ["./Nuget.Pipeline.Config", "."]
 COPY ["./Directory.Build.props","."]
-COPY ["src/TripArc.Case.API/TripArc.Case.Api.csproj", "src/TripArc.Case.Api/"]
+COPY ["src/TripArc.Case.Api/TripArc.Case.Api.csproj", "src/TripArc.Case.Api/"]
 COPY ["src/TripArc.Case.Data/TripArc.Case.Data.csproj", "src/TripArc.Case.Data/"]
 COPY ["src/TripArc.Case.Domain/TripArc.Case.Domain.csproj", "src/TripArc.Case.Domain/"]
 COPY ["src/TripArc.Case.Shared/TripArc.Case.Shared.csproj", "src/TripArc.Case.Shared/"]
